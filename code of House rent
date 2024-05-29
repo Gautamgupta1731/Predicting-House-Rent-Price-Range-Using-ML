@@ -1,0 +1,56 @@
+import warnings
+warnings.filterwarnings('ignore')
+
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import math
+import plotly.express as px
+
+import matplotlib.pyplot as plt
+
+
+# splting data into test and train
+from sklearn.model_selection import train_test_split
+
+merged=pd.read_csv(r'/gautam4.csv')
+X=merged.drop(columns=['price'],axis=1)
+y=merged['price']
+x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=101)
+
+print("x train: ",x_train.shape)
+print("x test: ",x_test.shape)
+print("y train: ",y_train.shape)
+print("y test: ",y_test.shape)
+
+from sklearn.metrics import r2_score,mean_absolute_error,mean_squared_error
+def predict(ml_model):
+    print('Model is: {}'.format(ml_model))
+    model= ml_model.fit(x_train,y_train)
+    print("Training score: {}".format(model.score(x_train,y_train)))
+    predictions = model.predict(x_test)
+    print("y test are: {}".format(y_test))
+    print("Predictions are: {}".format(predictions))
+    print('\n')
+    r2score=r2_score(y_test,predictions)
+    print("r2 score is: {}".format(r2score))
+
+
+
+    print('MAE:{}'.format(mean_absolute_error(y_test,predictions)))
+    print('MSE:{}'.format(mean_squared_error(y_test,predictions)))
+    print('RMSE:{}'.format(np.sqrt(mean_squared_error(y_test,predictions))))
+
+    sns.distplot(y_test-predictions)
+
+
+#here second code start gautam
+from statsmodels.api import OLS
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import GradientBoostingRegressor,RandomForestRegressor
+
+predict(RandomForestRegressor())
+
+predict(KNeighborsRegressor())
